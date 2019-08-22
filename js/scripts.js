@@ -19,36 +19,20 @@ var  repository= [];
     function getAll() {
       return repository;
     }
-  function addListItem(pokemon){
-     var $pokemonlist = $(".pokemon-list");
-  var $listItem = $('<li>');
-  var $newButton =$('<button class="buttonstyle"> ' + pokemon.name + ' </button>');
-   $listItem.append($newButton);
-   $pokemonlist.append($listItem);
-   $newButton.on('click', function(event) {
-			showDetails(pokemon);
-     		});
-  }
-  function showDetails(pokemon) {
-  pokemonRepository.loadDetails(pokemon).then(function () {
-      console.log(pokemon);
-      showModal(pokemon);
-  });
-}
-   function loadList() {
-    return $.ajax(apiUrl).then(function (json) {
-      json.results.forEach(function (pokemon) {
-        var pokemon = {
-          name: pokemon.name,
-          detailsUrl: pokemon.url
-        };
-        add(pokemon);
-        console.log(pokemon)
-        });
-    }).catch(function (e) {
-      console.error(e);
-    });
-  }
+    function loadList() {
+     return $.ajax(apiUrl).then(function (json) {
+       json.results.forEach(function (pokemon) {
+         var pokemon = {
+           name: pokemon.name,
+           detailsUrl: pokemon.url
+         };
+         add(pokemon);
+         console.log(pokemon)
+         });
+     }).catch(function (e) {
+       console.error(e);
+     });
+   }
    function loadDetails(pokemon) {
     var url = pokemon.detailsUrl;
     return $.ajax(url).then(function (details) {
@@ -66,45 +50,40 @@ var  repository= [];
       console.error(e);
     });
   }
-   function showModal(pokemon) {
-    var $modalContainer =$("#modal-container");
-    $modalContainer.empty();
-    var modal = $('<div class ="modal" ></div>');
 
-    var closeButtonElement = $('<button class="modal-close"> close </button>');
+  function addListItem(pokemon){
+     var $pokemonlist = $(".pokemon-list");
+  var $listItem = $('<button type="button" class="pokemon-list_item list-group-item list-group-item-action" data-toggle="modal" data-target="#pokemon-modal">');
 
+  $listItem.text(pokemon.name);
 
-    closeButtonElement.on("click", hideModal);
-     var titleElement = $('<h1>  Name : '+ pokemon.name + '</h1>');
-     var contentElement = $('<p> Height : '+ pokemon.height + '</p>');
-     var weightElement = $('<p> Weight :'+ pokemon.weight + '</p>');
-     var imageElement = $('<img class="modal-img">');
-     imageElement.attr("src", pokemon.imageUrl);
-     var typesElement= $('<p> Type: '+ pokemon.types +'  </p>');
-
-    modal.append(closeButtonElement);
-    modal.append(titleElement);
-    modal.append(imageElement);
-    modal.append(contentElement);
-    modal.append(weightElement);
-    modal.append(typesElement);
-    $modalContainer.append(modal);
-    $modalContainer.addClass("is-visible");
+   $pokemonlist.append($listItem);
+   $listItem.on('click', function(event) {
+			showDetails(pokemon);
+     		});
   }
+  function showDetails(pokemon) {
+pokemonRepository.loadDetails(pokemon).then(function() {
+     var modal = $('.modal-body');
+     var name = $('.modal-title').text(pokemon.name);
+     var height = $('<p class="pokemon-height"></p>').text('Height: ' + pokemon.height);
 
-  function hideModal() {
-    var $modalContainer = $("#modal-container");
-    $modalContainer.removeClass("is-visible");
-  }
+     var type = $('<p class="pokemon-type"></p>').text('Type: ' + pokemon.types);
+     var weight= $('<p class="pokemon-weight"></p>').text('Weight: ' + pokemon.weight);
+     var image = $('<img class="pokemon-picture">');
 
-  $("body").keydown (function(e){
-      if(  e.key === "Escape"){
-    pokemonRepository.hideModal()
-    }
+     image.attr('src', pokemon.imageUrl);
+     modal.append(name)
+          .append(image)
+          .append(height)
+          .append(weight)
+          .append(type);
   });
-$("body").on("click",(e) => {
-     pokemonRepository.hideModal()
-    });
+}
+
+
+
+
       return {
       add: add,
       getAll: getAll,
@@ -112,8 +91,7 @@ $("body").on("click",(e) => {
       showDetails: showDetails,
       loadList: loadList,
       loadDetails:loadDetails,
-      showModal: showModal,
-      hideModal: hideModal,
+
     };
  })();
 
