@@ -97,27 +97,14 @@ var  repository= [];
     $modalContainer.removeClass("is-visible");
   }
 
-  /*(window).on("keydown", e => {
-    var $modalContainer = $("#modal-container");
-
-    if (
-      e.key === "Escape" &&
-      $modalContainer.hasClass("is-visible")
-       ) {
-
-          hideModal();
-
-        }
-    });*/
-  var $modalContainer= $("#modal-container");
-                          $modalContainer.on("click", e => {
-
-    var target = e.target;
-
-    if (target === $modalContainer) {
-      hideModal();
+  $("body").keydown (function(e){
+      if(  e.key === "Escape"){
+    pokemonRepository.hideModal()
     }
   });
+$("body").on("click",(e) => {
+     pokemonRepository.hideModal()
+    });
       return {
       add: add,
       getAll: getAll,
