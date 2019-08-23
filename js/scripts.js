@@ -42,7 +42,9 @@ var  repository= [];
       pokemon.types = [];
 
         for (var i = 0; i < details.types.length; i++) {
+
           pokemon.types.push(details.types[i].type.name);
+
         }
       }).catch(function (e) {
       console.error(e);
@@ -51,24 +53,28 @@ var  repository= [];
 
   function addListItem(pokemon){
      var $pokemonlist = $(".pokemon-list");
-     var $listItem = $('<button type="button" class="pokemon-list_item list-group-item list-group-item-action" data-toggle="modal" data-target="#pokemon-modal">');
-     $listItem.text(pokemon.name);
-     $pokemonlist.append($listItem);
-     $listItem.on('click', function(event) {
+  var $listItem = $('<button type="button" class="pokemon-list_item list-group-item list-group-item-action" data-toggle="modal" data-target="#pokemon-modal">');
+
+  $listItem.text(pokemon.name);
+
+   $pokemonlist.append($listItem);
+   $listItem.on('click', function(event) {
 			showDetails(pokemon);
      		});
   }
   function showDetails(pokemon) {
 pokemonRepository.loadDetails(pokemon).then(function() {
-     var name=$('.modal-header>h5').text(pokemon.name);
-     var modal = $('.modal-body').empty();
+     var modal = $('.modal-body');
+     var name = $('.modal-title').text(pokemon.name);
      var height = $('<p class="pokemon-height"></p>').text('Height: ' + pokemon.height);
+
      var type = $('<p class="pokemon-type"></p>').text('Type: ' + pokemon.types);
      var weight= $('<p class="pokemon-weight"></p>').text('Weight: ' + pokemon.weight);
      var image = $('<img class="pokemon-picture">');
 
      image.attr('src', pokemon.imageUrl);
-     modal.append(image)
+     modal.append(name)
+          .append(image)
           .append(height)
           .append(weight)
           .append(type);
